@@ -1,41 +1,14 @@
-2003-04-10  Nick Garnett  <nickg@balti.calivar.com>
-
-	* src/sparc.ld: 
-	Added libsupc++.a to GROUP() directive for GCC versions later than
-	3.0.
-
-2002-10-19  Jonathan Larmour  <jifl@eCosCentric.com>
-
-	Patch from Jiri Gaisler:
-	* src/context.S (hal_thread_load_context): Wait a little after writing
-	psr.
-	(hal_setjmp): Ditto.
-	* src/vectors.S (genuine_reset): Reorder window setup writes to
-	streamline.
-	
-
-2002-04-29  Jonathan Larmour  <jlarmour@redhat.com>
-
-	* src/vectors.S:
-	* src/vec_xvsr.S:
-	* src/vec_ivsr.S:
-	Don't use .file as it can confuse debugging since the .file
-	doesn't contain the path and therefore the debugger will never
-	know where it lives! This conflicts with using -Wa,--gstabs.
-
-2002-03-18  Hugo Tyson  <hmt@redhat.com>
-
-	* src/vectors.S: Add CYGPKG_HAL_SPARC_ERC32 to list of ifdefs.
-
-2002-03-14  Jiri Gaisler  <jiri@gaisler.com>
-
-	* Initial version based on the SPARClite HAL.
-
-//===========================================================================
+//==========================================================================
+//
+//      abort.cxx
+//
+//      Dummy abort()
+//
+//==========================================================================
 //####ECOSGPLCOPYRIGHTBEGIN####
 // -------------------------------------------
 // This file is part of eCos, the Embedded Configurable Operating System.
-// Copyright (C) 1998, 1999, 2000, 2001, 2002 Red Hat, Inc.
+// Copyright (C) 2003 Nick Garnett <nickg@calivar.com>
 //
 // eCos is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free
@@ -59,11 +32,35 @@
 //
 // This exception does not invalidate any other reasons why a work based on
 // this file might be covered by the GNU General Public License.
-//
-// Alternative licenses for eCos may be arranged by contacting Red Hat, Inc.
-// at http://sources.redhat.com/ecos/ecos-license/
 // -------------------------------------------
 //####ECOSGPLCOPYRIGHTEND####
-//===========================================================================
+//==========================================================================
+//#####DESCRIPTIONBEGIN####
+//
+// Author(s):   nickg
+// Date:        2003-04-02
+// Purpose:     provide a dummy abort() function
+// Description: Parts of the C and C++ compiler runtime systems have 
+//              references to abort() built in to them. This definition
+//              satisfies these references. Note that it is not expected
+//              that this function will ever be called.
+//
+//####DESCRIPTIONEND####
+//
+//==========================================================================
 
-//EOF ChangeLog
+#include <pkgconf/infra.h>
+#include <cyg/infra/cyg_ass.h>
+
+//==========================================================================
+
+extern "C" void
+abort( void )
+{
+    CYG_FAIL("abort() called");
+    for (;;)
+        continue;
+}
+
+//==========================================================================
+// EOF abort.cxx
